@@ -68,8 +68,19 @@ CREATE TABLE `purchaseproduct`(
   `product_id` INT NOT NULL,
   `price` TEXT NOT NULL,
   `quantity` INT NOT NULL,
+  `index` INT NOT NULL,
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
+);
+
+DROP TABLE IF EXISTS `purchasecustomproduct`;
+CREATE TABLE `purchasecustomproduct`(
+  `purchase_id` INT NOT NULL,
+  `name` TEXT NOT NULL,
+  `price` TEXT NOT NULL,
+  `quantity` INT NOT NULL,
+  `index` INT NOT NULL,
+  FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
 );
 
 DROP TABLE IF EXISTS `favoriteproduct`;

@@ -29,7 +29,7 @@
 - store_id
 - user_id
 - price
-- timestamp
+- purchased_at
 
 # PurchaseProduct
 - id
@@ -37,6 +37,15 @@
 - product_id
 - price
 - quantity
+- index
+
+# PurchaseCustomProduct
+- id
+- purchase_id
+- name
+- price
+- quantity
+- index
 
 # FavoriteProduct
 - id
