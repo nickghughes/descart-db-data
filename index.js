@@ -211,8 +211,8 @@ async function insertStoreProducts() {
   });
 
   let data = JSON.parse(fs.readFileSync('products.json'));
-  let values = data.map((product) => `(${storeMap[product['store']]}, ${productMap[product['name']]})`).join(',');
-  let query = `INSERT INTO \`storeproduct\` (store_id, product_id) VALUES ${values}`;
+  let values = data.map((product) => `(${storeMap[product['store']]}, ${productMap[product['name']]}, "${product['price'].split(" ")[0]}", "${product['url']}")`).join(',');
+  let query = `INSERT INTO \`storeproduct\` (store_id, product_id, price, url) VALUES ${values}`;
   await do_query(query)
 }
 

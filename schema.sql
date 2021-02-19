@@ -45,6 +45,8 @@ DROP TABLE IF EXISTS `storeproduct`;
 CREATE TABLE `storeproduct`(
   `store_id` INT NOT NULL,
   `product_id` INT NOT NULL,
+  `price` TEXT NOT NULL,
+  `url` TEXT,
   FOREIGN KEY (`store_id`) REFERENCES `store`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
 );
@@ -55,6 +57,7 @@ CREATE TABLE `purchase`(
   `store_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `price` TEXT NOT NULL,
+  `num_items` INT NOT NULL,
   `purchased_at` DATE NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`store_id`) REFERENCES `store`(`id`),

@@ -23,12 +23,15 @@
 - id
 - product_id
 - store_id
+- price
+- url
 
 # Purchase
 - id
 - store_id
 - user_id
 - price
+- num_items
 - purchased_at
 
 # PurchaseProduct
