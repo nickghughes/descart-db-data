@@ -1,4 +1,4 @@
-DROP DATABASE `descart`;
+DROP DATABASE IF EXISTS `descart`;
 CREATE DATABASE `descart`;
 USE `descart`;
 
@@ -43,10 +43,12 @@ CREATE TABLE `store`(
 
 DROP TABLE IF EXISTS `storeproduct`;
 CREATE TABLE `storeproduct`(
+  `id` INT NOT NULL AUTO_INCREMENT,
   `store_id` INT NOT NULL,
   `product_id` INT NOT NULL,
   `price` TEXT NOT NULL,
   `url` TEXT,
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`store_id`) REFERENCES `store`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
 );
@@ -67,22 +69,26 @@ CREATE TABLE `purchase`(
 
 DROP TABLE IF EXISTS `purchaseproduct`;
 CREATE TABLE `purchaseproduct`(
+  `id` INT NOT NULL AUTO_INCREMENT,
   `purchase_id` INT NOT NULL,
   `product_id` INT NOT NULL,
   `price` TEXT NOT NULL,
   `quantity` INT NOT NULL,
   `index` INT NOT NULL,
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
 );
 
 DROP TABLE IF EXISTS `purchasecustomproduct`;
 CREATE TABLE `purchasecustomproduct`(
+  `id` INT NOT NULL AUTO_INCREMENT,
   `purchase_id` INT NOT NULL,
   `name` TEXT NOT NULL,
   `price` TEXT NOT NULL,
   `quantity` INT NOT NULL,
   `index` INT NOT NULL,
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
 );
 
@@ -90,6 +96,7 @@ DROP TABLE IF EXISTS `favoriteproduct`;
 CREATE TABLE `favoriteproduct`(
   `user_id` INT NOT NULL,
   `product_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`,`product_id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
 );
@@ -98,6 +105,7 @@ DROP TABLE IF EXISTS `favoritepurchase`;
 CREATE TABLE `favoritepurchase`(
   `purchase_id` INT NOT NULL,
   `user_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`,`purchase_id`),
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 );
