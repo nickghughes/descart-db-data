@@ -27,7 +27,8 @@ CREATE TABLE `product`(
   `image_url` TEXT,
   `manufacturer_id` INT,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer`(`id`),
+  FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   UNIQUE INDEX `product_id_UNIQUE` (`id` ASC) VISIBLE
 );
 
@@ -49,8 +50,10 @@ CREATE TABLE `storeproduct`(
   `price` TEXT NOT NULL,
   `url` TEXT,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`store_id`) REFERENCES `store`(`id`),
+  FOREIGN KEY (`store_id`) REFERENCES `store`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS `purchase`;
@@ -62,8 +65,10 @@ CREATE TABLE `purchase`(
   `num_items` INT NOT NULL,
   `purchased_at` DATE NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`store_id`) REFERENCES `store`(`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+  FOREIGN KEY (`store_id`) REFERENCES `store`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   UNIQUE INDEX `purchase_id_UNIQUE` (`id` ASC) VISIBLE
 );
 
@@ -76,8 +81,10 @@ CREATE TABLE `purchaseproduct`(
   `quantity` INT NOT NULL,
   `index` INT NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
+  FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS `purchasecustomproduct`;
@@ -90,26 +97,27 @@ CREATE TABLE `purchasecustomproduct`(
   `index` INT NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS `favoriteproduct`;
 CREATE TABLE `favoriteproduct`(
-  `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
   `product_id` INT NOT NULL,
-  `active` BOOLEAN,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+  PRIMARY KEY (`user_id`,`product_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS `favoritepurchase`;
 CREATE TABLE `favoritepurchase`(
-  `id` INT NOT NULL AUTO_INCREMENT,
   `purchase_id` INT NOT NULL,
   `user_id` INT NOT NULL,
-  `active` BOOLEAN,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
+  PRIMARY KEY (`user_id`,`purchase_id`),
+  FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
