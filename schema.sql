@@ -94,18 +94,22 @@ CREATE TABLE `purchasecustomproduct`(
 
 DROP TABLE IF EXISTS `favoriteproduct`;
 CREATE TABLE `favoriteproduct`(
+  `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
   `product_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`,`product_id`),
+  `active` BOOLEAN,
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
 );
 
 DROP TABLE IF EXISTS `favoritepurchase`;
 CREATE TABLE `favoritepurchase`(
+  `id` INT NOT NULL AUTO_INCREMENT,
   `purchase_id` INT NOT NULL,
   `user_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`,`purchase_id`),
+  `active` BOOLEAN,
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 );
