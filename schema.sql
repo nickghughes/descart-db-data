@@ -63,7 +63,7 @@ CREATE TABLE `purchase`(
   `user_id` INT NOT NULL,
   `price` TEXT NOT NULL,
   `num_items` INT NOT NULL,
-  `purchased_at` DATE NOT NULL,
+  `purchased_at` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`store_id`) REFERENCES `store`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE,
