@@ -129,6 +129,6 @@ CREATE TABLE `shoppingcartitem`(
   PRIMARY KEY(`user_id`,`storeproduct_id`),
   FOREIGN KEY(`user_id`) REFERENCES `user`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY(`storeproduct_id`) REFERENCES `user`(`id`)
+  FOREIGN KEY(`storeproduct_id`) REFERENCES `storeproduct`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE
 );
