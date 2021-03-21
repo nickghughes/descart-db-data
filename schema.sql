@@ -121,3 +121,14 @@ CREATE TABLE `favoritepurchase`(
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+DROP TABLE IF EXISTS `shoppingcartitem`;
+CREATE TABLE `shoppingcartitem`(
+  `user_id` INT NOT NULL,
+  `storeproduct_id` INT NOT NULL,
+  PRIMARY KEY(`user_id`,`storeproduct_id`),
+  FOREIGN KEY(`user_id`) REFERENCES `user`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(`storeproduct_id`) REFERENCES `user`(`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
