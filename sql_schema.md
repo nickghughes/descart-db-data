@@ -60,4 +60,9 @@
 - purchase_id
 - user_id
 
+# Category
+- id
+- name
+- product_id
+
 ### Everything should have created_at and updated_at fields by default, lmk if not

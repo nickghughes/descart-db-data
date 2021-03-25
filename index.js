@@ -4,19 +4,19 @@ const parse = require("csv-parse/lib/sync");
 const axios = require("axios");
 const { verify } = require("crypto");
 
-// let con = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "password",
-//   database: "descart"
-// });
+ let con = mysql.createConnection({
+   host: "localhost",
+   user: "root",
+   password: "password",
+   database: "descart"
+ });
 
-let con = mysql.createConnection({
-  host: "descart-db.ch8nzvor5ylw.us-east-2.rds.amazonaws.com",
-  user: "descartadmin",
-  password: "sJDk3KHwuLYk7WqW",
-  database: "descart"
-});
+//let con = mysql.createConnection({
+//  host: "descart-db.ch8nzvor5ylw.us-east-2.rds.amazonaws.com",
+//  user: "descartadmin",
+//  password: "sJDk3KHwuLYk7WqW",
+//  database: "descart"
+//});
 
 async function connect() {
   return new Promise((resolve, reject) => {
@@ -165,7 +165,7 @@ function onlyUnique(value, index, self) {
 }
 
 async function insertStores() {
-  let data = fs.readFileSync('final_data.csv', 'utf-8');
+  let data = fs.readFileSync('final_data2.csv', 'utf-8');
   const records = parse(data, {
     columns: true,
     skip_empty_lines: true
@@ -179,7 +179,7 @@ async function insertStores() {
 }
 
 async function insertBrands() {
-  let data = fs.readFileSync('final_data.csv', 'utf-8');
+  let data = fs.readFileSync('final_data2.csv', 'utf-8');
   const records = parse(data, {
     columns: true,
     skip_empty_lines: true
@@ -291,12 +291,31 @@ async function insertPurchases() {
   await do_query(query);
 }
 
+function addCategories() {
+  let data = fs.readFileSync(`amazon_data.csv`,`utf-8`);
+  const records = parse(data, {
+    columns: true,
+    skip_empty_lines: true
+  });
+  let mapCategories = {};
+  records.forEach((line) => {
+    mapCategories[line[`product_name`]] = line[`category`].split(`|`)[0].trim();
+  });
+
+  let products = JSON.parse(fs.readFileSync(`products.json`));
+  let newProducts = [];
+  products.forEach(p => {
+    let nP = Object.assign({}, p, {category:mapCategories[p[`name`]]})
+    newProducts.push(nP);
+  })
+}
+
 // getRecords();
 // fixCommasQuotes();
 // csvToStoreJson();
 // insertBrands();
 // csvToJson();
-(async function() {
+async function() {
   await connect();
   await insertStores();
   await insertBrands();
@@ -305,5 +324,8 @@ async function insertPurchases() {
   await insertStoreProducts();
   await insertUsers();
   await insertPurchases();
+  await insertCategories();
   console.log("Done");
 })();
+
+addCategories();
