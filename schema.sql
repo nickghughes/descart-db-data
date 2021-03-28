@@ -20,14 +20,24 @@ CREATE TABLE `manufacturer`(
   UNIQUE INDEX `manufacturer_id_UNIQUE` (`id` ASC) VISIBLE
 );
 
+DROP TABLE IF EXISTS `category`;
+CREATE TABLE `category`(
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `category_id_UNIQUE` (`id` ASC) VISIBLE
+);
+
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`(
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` TEXT NOT NULL,
   `image_url` TEXT,
   `manufacturer_id` INT,
+  `category_id` INT,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer`(`id`)
+  FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer`(`id`),
+  FOREIGN KEY (`category_id`) REFERENCES `category`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE,
   UNIQUE INDEX `product_id_UNIQUE` (`id` ASC) VISIBLE
 );
@@ -119,15 +129,5 @@ CREATE TABLE `favoritepurchase`(
   FOREIGN KEY (`purchase_id`) REFERENCES `purchase`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-  ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-DROP TABLE IF EXISTS `category`;
-CREATE TABLE `category`(
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` TEXT NOT NULL,
-  `product_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
   ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -165,7 +165,7 @@ function onlyUnique(value, index, self) {
 }
 
 async function insertStores() {
-  let data = fs.readFileSync('final_data2.csv', 'utf-8');
+  let data = fs.readFileSync('final_data.csv', 'utf-8');
   const records = parse(data, {
     columns: true,
     skip_empty_lines: true
@@ -179,7 +179,7 @@ async function insertStores() {
 }
 
 async function insertBrands() {
-  let data = fs.readFileSync('final_data2.csv', 'utf-8');
+  let data = fs.readFileSync('final_data.csv', 'utf-8');
   const records = parse(data, {
     columns: true,
     skip_empty_lines: true
@@ -192,9 +192,11 @@ async function insertBrands() {
 
 let storeMap = {};
 let brandMap = {};
-async function mapStoresAndBrands() {
+let catMap = {};
+async function mapStoresBrandsCats() {
   const stores = await do_query("SELECT * FROM `store`");
   const brands = await do_query("SELECT * FROM `manufacturer`");
+  const categories = await do_query("SELECT * FROM `category`");
   
   stores.forEach((store) => {
     storeMap[store['name']] = store['id'];
@@ -202,18 +204,21 @@ async function mapStoresAndBrands() {
   brands.forEach((brand) => {
     brandMap[brand['name']] = brand['id'];
   });
+  categories.forEach((cat) => {
+    catMap[cat['name']] = cat['id'];
+  })
 }
 
 async function insertProducts() {
   let nameLookup = {};
   let data = [];
-  JSON.parse(fs.readFileSync('products.json')).map((p) => {
+  JSON.parse(fs.readFileSync('new_products.json')).map((p) => {
     if (nameLookup[p['name']] || Number.isNaN(Number(p['price']))) return;
     nameLookup[p['name']] = true;
     data.push(p);
   });
-  let values = data.map((product) => `(\"${product['name'].split("\"").join("\\\"")}\", ${product["image"] ? `\"${product["image"]}\"` : "NULL"}, ${brandMap[product['brand']] || "NULL"})`).join(',');
-  let query = `INSERT INTO \`product\` (name, image_url, manufacturer_id) VALUES ${values}`;
+  let values = data.map((product) => `(\"${product['name'].split("\"").join("\\\"")}\", ${product["image"] ? `\"${product["image"]}\"` : "NULL"}, ${brandMap[product['brand']] || "NULL"}, ${catMap[product['category']] || "NULL"})`).join(',');
+  let query = `INSERT INTO \`product\` (name, image_url, manufacturer_id, category_id) VALUES ${values}`;
   await do_query(query)
 }
 
@@ -291,6 +296,15 @@ async function insertPurchases() {
   await do_query(query);
 }
 
+async function insertCategories() {
+  let data = JSON.parse(fs.readFileSync('new_products.json'));
+  let values = data.map((product) => product['category']).filter(onlyUnique).filter(a => a !== '');
+
+  console.log(values.length, values);
+  let query = `INSERT INTO \`category\` (\`name\`) VALUES ${values.map(v => `(\"${v}\")`).join(',')}`;
+  await do_query(query);
+}
+
 function addCategories() {
   let data = fs.readFileSync(`amazon_data.csv`,`utf-8`);
   const records = parse(data, {
@@ -308,6 +322,7 @@ function addCategories() {
     let nP = Object.assign({}, p, {category:mapCategories[p[`name`]]})
     newProducts.push(nP);
   })
+  fs.writeFileSync('new_products.json', JSON.stringify(newProducts, null, 2));
 }
 
 // getRecords();
@@ -315,17 +330,15 @@ function addCategories() {
 // csvToStoreJson();
 // insertBrands();
 // csvToJson();
-async function() {
+(async function() {
   await connect();
   await insertStores();
   await insertBrands();
-  await mapStoresAndBrands();
+  await insertCategories();
+  await mapStoresBrandsCats();
   await insertProducts();
   await insertStoreProducts();
   await insertUsers();
   await insertPurchases();
-  await insertCategories();
   console.log("Done");
 })();
-
-addCategories();
