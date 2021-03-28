@@ -8,8 +8,13 @@
 - name
 - image_url
 - manufacturer_id
+- category_id
 
 # Manufacturer
+- id
+- name
+
+# Category
 - id
 - name
 
@@ -59,10 +64,5 @@
 - id
 - purchase_id
 - user_id
-
-# Category
-- id
-- name
-- product_id
 
 ### Everything should have created_at and updated_at fields by default, lmk if not
