@@ -8,8 +8,13 @@
 - name
 - image_url
 - manufacturer_id
+- category_id
 
 # Manufacturer
+- id
+- name
+
+# Category
 - id
 - name
 
